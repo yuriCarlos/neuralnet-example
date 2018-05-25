@@ -3,19 +3,21 @@ import numpy as np
 from activation_func import d_sigmoide, sigmoid
 
 class Net():
-	def __init__(self):
+	def __init__(self, class_divisor=None):
 		self.layers=[]
 		self.g=sigmoid
 		self.d_g=d_sigmoide
+		self.class_divisor= class_divisor
 
 	#cria um layer com n neuronios
 	def create_layer(self, n_num):
 		self.layers.append([Neuron(None if len(self.layers) == 0 else self.layers[-1]) for i in range(0, n_num)])
 
-	def predict(self, X):
+	def predict(self, X, Y):
 		result=[]
 		for x in X:
-			result.append(self.feedforward(x))
+			# get the predicted label
+			result.append( [ int(predicted / self.class_divisor) for predicted in self.feedforward(x)] if self.class_divisor is not None else self.feedforward(x))
 		return result
 
 	def feedforward(self, x):
@@ -32,7 +34,7 @@ class Net():
 		
 		return [n.out for n in self.layers[-1]]
 	
-	def train(self, X, Y, learning_rate=.5, batch=1, epoch=50000, error_to_stop=.005):
+	def train(self, X, Y, learning_rate=.4, batch=1, epoch=50000, error_to_stop=.005):
 		# contador de itens que passaram pelo batch
 		batch_id = 0
 		for i in range(0, epoch):
@@ -81,34 +83,3 @@ class Net():
 		return erro_quad_medio/len(X), batch_id
 
 
-net=Net()
-net.create_layer(3)
-net.create_layer(2)
-net.create_layer(1)
-print(net.layers)
-
-X = [
-	
-	[.9,.9,.9],
-	[.9,.9,.1],
-	[.9,.1,.9],
-	[.9,.1,.1]
-]
-
-Y=[
-	[0],
-	[1],
-	[1],
-	[0]
-]
-
-'''Y=[
-	[1],
-	[1],
-	[1],
-	[0]
-]'''
-
-net.train(X, Y, batch=8)
-print(net.predict(X))
-print(Y)

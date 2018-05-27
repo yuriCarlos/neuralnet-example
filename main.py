@@ -45,8 +45,6 @@ def xor_problem():
     print(Y)
     metrics(Y,res)
 
-xor_problem()
-
 def normalize(min, max, x):
     return (x - min)/ (max-min)
 
@@ -70,26 +68,25 @@ def iris_problem():
 
     
     # seleciona as características e normaliza elas
-    columns = [0, 2]
+    columns = [0, 1, 2]
     X = []
     for x in data:
         X.append([normalize(min_x[column], max_x[column], x[column]) for column in columns])
-    # data = aux
-    print(X)
 
-    # pega 100 primeiros dados para treino
+    # split train test
     data_num=100
-    x_test = X[:data_num]
-    y_test = Y[:data_num]
-    print(y_test)
+    x_train = X[:data_num]
+    y_train = Y[:data_num]
+    x_test = X[:len(X) - data_num]
+    y_test = Y[:len(X) - data_num]
 
     #cria a rede
     net = Net(class_divisor=1/3)
-    net.create_layer(len(x_test[0]))
-    net.create_layer(4)
+    net.create_layer(len(x_train[0]))
+    net.create_layer(10)
     net.create_layer(1, last_layer=True)
 
-    net.train(x_test, y_test, learning_rate=0.3, epoch=5000)
+    net.train(x_train, y_train, learning_rate=3, epoch=5000)
 
     res = net.predict(x_test)
     print(res)
@@ -97,3 +94,5 @@ def iris_problem():
     metrics(y_test,res)
 
 # iris_problem()
+
+xor_problem()

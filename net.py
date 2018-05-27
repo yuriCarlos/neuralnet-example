@@ -10,8 +10,11 @@ class Net():
 		self.class_divisor= class_divisor
 
 	#cria um layer com n neuronios
-	def create_layer(self, n_num):
+	def create_layer(self, n_num, last_layer=False):
 		self.layers.append([Neuron(None if len(self.layers) == 0 else self.layers[-1]) for i in range(0, n_num)])
+		# cria um neuronio de bias
+		if not last_layer:
+			self.layers[-1].append(Neuron(None, bias_neuron=True))
 
 	def predict(self, X):
 		result=[]
@@ -23,7 +26,8 @@ class Net():
 	def feedforward(self, x):
 		# entrada do dado na rede
 		for idn, n in enumerate(self.layers[0]):
-			n.out=x[idn]
+			if not n.bias_neuron:
+				n.out=x[idn]
 			
 		#passa os dados através dos layers
 		for layer in self.layers:
@@ -45,7 +49,7 @@ class Net():
 			print('EQM')
 			print(mean_square_error)
 			# se o erro for menor que o erro determinado de parada então para a rede
-			if(mean_square_error <= error_to_stop) or (last_mean - mean_square_error) < 0.00000001:
+			if(mean_square_error <= error_to_stop): # or (last_mean - mean_square_error) < 0.00000001:
 				break
 			
 			last_mean=mean_square_error

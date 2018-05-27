@@ -21,7 +21,7 @@ def xor_problem():
     net=Net(class_divisor=0.5)
     net.create_layer(3)
     net.create_layer(2)
-    net.create_layer(1)
+    net.create_layer(1, last_layer=True)
     print(net.layers)
 
     X = [
@@ -43,11 +43,9 @@ def xor_problem():
     res = net.predict(X)
     print(res)
     print(Y)
+    metrics(Y,res)
 
-    print('errors')
-    print(metrics(Y,res))
-
-#xor_problem()
+xor_problem()
 
 def normalize(min, max, x):
     return (x - min)/ (max-min)
@@ -89,13 +87,13 @@ def iris_problem():
     net = Net(class_divisor=1/3)
     net.create_layer(len(x_test[0]))
     net.create_layer(4)
-    net.create_layer(1)
+    net.create_layer(1, last_layer=True)
 
-    net.train(x_test, y_test, learning_rate=0.9, epoch=5000)
+    net.train(x_test, y_test, learning_rate=0.3, epoch=5000)
 
     res = net.predict(x_test)
     print(res)
     print(y_test)
     metrics(y_test,res)
 
-iris_problem()
+# iris_problem()

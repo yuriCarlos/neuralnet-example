@@ -2,12 +2,16 @@ from random import randint
 INDICE=0
 
 class Neuron():
-	def __init__(self, layer_to_connect):
+	def __init__(self, layer_to_connect, bias_neuron=False):
 		self.out=.0
 		self.delta=.0
 		self.error=0
 		self.weights=[]
 		global INDICE
+		self.bias_neuron=bias_neuron
+
+		if bias_neuron:
+			self.out = 1
 
 		self.id=INDICE
 		INDICE+=1

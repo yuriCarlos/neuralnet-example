@@ -13,7 +13,7 @@ class Net():
 	def create_layer(self, n_num):
 		self.layers.append([Neuron(None if len(self.layers) == 0 else self.layers[-1]) for i in range(0, n_num)])
 
-	def predict(self, X, Y):
+	def predict(self, X):
 		result=[]
 		for x in X:
 			# get the predicted label
@@ -37,14 +37,19 @@ class Net():
 	def train(self, X, Y, learning_rate=.4, batch=1, epoch=50000, error_to_stop=.005):
 		# contador de itens que passaram pelo batch
 		batch_id = 0
+		last_mean=10
 		for i in range(0, epoch):
+			print('epoch' + str(i))
 			# treina com essa epoca
 			mean_square_error, batch_id = self._train(X, Y, learning_rate, batch_id, batch)
 			print('EQM')
 			print(mean_square_error)
 			# se o erro for menor que o erro determinado de parada então para a rede
-			if(mean_square_error <= error_to_stop):
+			if(mean_square_error <= error_to_stop) or (last_mean - mean_square_error) < 0.00000001:
 				break
+			
+			last_mean=mean_square_error
+
 
 	def _train(self, X, Y, learning_rate, batch_id, batch_size):
 		erro_quad_medio = .0
